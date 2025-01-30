@@ -35,7 +35,14 @@ if ing_list:
         
         ing_str += f + ' '
 
-        smoothie_fruit_response = requests.get("https://my.smoothiefroot.com/api/fruit/" + f)
+        search_on = session.table("smoothies.public.fruit_options").filter(col('FRUIT_NAME') == f).select("SEARCH_ON").collect()[0][0]
+        if search_on:
+            
+            smoothie_fruit_response = requests.get("https://my.smoothiefroot.com/api/fruit/" + search_on)
+
+        else:
+            smoothie_fruit_response = requests.get("https://my.smoothiefroot.com/api/fruit/" + f)
+            
         st.subheader(f + ' Nutrition Info')
         sf_df = st.dataframe(data =smoothie_fruit_response.json(), use_container_width = True)
 
